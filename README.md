@@ -16,15 +16,16 @@ python -m http.server 8780
 
 ブラウザで http://127.0.0.1:8780/sontaku/ を開きます。`sontaku` フォルダの中のファイルを直接開くと、カメラとモジュールが動かないブラウザがあります。
 
-## Cloudflare Pages
+## Cloudflare
 
-Git 連携でこのリポジトリの `main` を使います。
+Git 連携でこのリポジトリの `main` を使います。プロジェクト名は `sontaku-janken` にします。`wrangler.jsonc` の `name` と同じである必要があります。
 
-- フレームワークは None
 - ビルドコマンドは空
-- 出力ディレクトリはリポジトリのルート
+- デプロイコマンドは `npx wrangler deploy`
+- プレビューコマンドは `npx wrangler preview`
+- ルートディレクトリは空（リポジトリの直下）
 
-出力を `sontaku` にすると、`/sontaku/` では開けなくなり、直下の `_headers` も読まれません。デプロイ後は `https://<project>.pages.dev/sontaku/` で確認します。
+デプロイ後は `https://sontaku-janken.<account>.workers.dev/sontaku/` で確認します。
 
 独自ドメインは、Pages のプロジェクトができてから `tech.hahahahaha-nnn.work` を追加します。DNS は ConoHa のまま、表示された向き先へ `tech` の CNAME を足します。
 
