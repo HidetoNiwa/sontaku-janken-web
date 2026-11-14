@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1e3a5f">
+  <title>忖度じゃんけん</title>
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <div class="brand-seal" aria-hidden="true">忖</div>
+      <div>
+        <p class="eyebrow">必ず負けるじゃんけん</p>
+        <h1>忖度じゃんけん</h1>
+      </div>
+      <a class="top-link" href="tech.html">技術の説明</a>
+    </div>
+    <p class="lede">相手の手をカメラで読み、「ぽん」の音の0.2秒後に、必ず負ける手を出します。</p>
+    <ol class="steps">
+      <li><span>一</span>カメラを起動し、手が正しく読めるか確かめる</li>
+      <li><span>二</span>最初はグーでグーを出すと、じゃんけんぽんが始まる</li>
+      <li><span>三</span>「ぽん」で手を出す。音の0.2秒後に読みます</li>
+    </ol>
+  </header>
+
+  <main>
+    <section class="stage-grid" aria-label="勝負">
+      <div class="camera-card">
+        <canvas id="stage" width="960" height="540"></canvas>
+        <video id="video" playsinline muted></video>
+        <div class="finder" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <div class="call-overlay">
+          <strong id="call">待機</strong>
+          <span id="call-sub">勝負の前に、読みと手が一致するか見てください</span>
+        </div>
+        <p id="pill" class="pill">カメラ停止中</p>
+        <div id="watch-bar" class="watch-bar" hidden><span></span></div>
+        <div id="idle-message" class="idle-message">
+          <p id="idle-text">カメラを起動すると、ここに手が映ります。</p>
+        </div>
+      </div>
+
+      <aside class="throw-card" aria-live="polite">
+        <h2>こちらの手</h2>
+        <div class="hand-stage">
+          <div id="seal" class="seal" hidden>負</div>
+          <div id="hand-art" class="hand-art"></div>
+        </div>
+        <p id="hand-name" class="hand-name">未出し</p>
+        <p id="excuse" class="excuse">まだ手は出していません</p>
+        <p id="result-label" class="result-label"></p>
+      </aside>
+    </section>
+
+    <div class="controls">
+      <button id="camera-btn" class="ghost" type="button">カメラを起動</button>
+      <button id="start-btn" class="primary" type="button" disabled>勝負する</button>
+      <label class="sound"><input id="sound" type="checkbox" checked>音声と掛け声</label>
+      <label class="sound">
+        掛け声
+        <select id="call-style" class="field">
+          <option value="formal">最初はグー</option>
+          <option value="quick">じゃんけんぽん</option>
+        </select>
+      </label>
+      <label class="sound" id="device-label" hidden>
+        カメラ
+        <select id="device" class="field"></select>
+      </label>
+    </div>
+
+    <section class="book" aria-label="勝負帳">
+      <div class="book-head">
+        <div>
+          <h2>勝負帳</h2>
+          <p class="note">結果はカメラの読み取りにもとづきます。記録はこのブラウザに残ります。</p>
+        </div>
+        <div class="controls controls-tight">
+          <button id="csv-btn" class="ghost" type="button">CSVを保存</button>
+          <button id="clear-btn" class="textish" type="button">記録を消す</button>
+        </div>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi"><span>勝負数</span><strong id="kpi-total">0</strong></div>
+        <div class="kpi"><span>あなたの勝ち</span><strong id="kpi-lose">0</strong></div>
+        <div class="kpi"><span>あなたの負け</span><strong id="kpi-win">0</strong></div>
+        <div class="kpi"><span>あいこ</span><strong id="kpi-draw">0</strong></div>
+        <div class="kpi"><span>読み取れず</span><strong id="kpi-unread">0</strong></div>
+        <div class="kpi"><span>忖度成功率</span><strong id="kpi-rate">—</strong></div>
+      </div>
+
+      <div class="charts">
+        <article class="chart-card">
+          <h3>あなたの勝ち数の推移</h3>
+          <div class="chart-box"><canvas id="line-chart"></canvas></div>
+        </article>
+        <article class="chart-card split">
+          <div>
+            <h3>勝ち負け</h3>
+            <div class="chart-box"><canvas id="bar-chart"></canvas></div>
+          </div>
+          <div>
+            <h3>相手の手</h3>
+            <div class="chart-box"><canvas id="hand-chart"></canvas></div>
+          </div>
+        </article>
+        <div id="empty-charts" class="empty-charts">まだ勝負の記録がありません。</div>
+      </div>
+
+      <div class="log-wrap">
+        <table>
+          <thead>
+            <tr><th>日時</th><th>相手</th><th>こちら</th><th>結果</th></tr>
+          </thead>
+          <tbody id="log-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <p class="foot">映像と勝負の記録は、このブラウザの中だけに残ります。ページのファイルも、このサイト自身から配信しています。スペースキーでも勝負を始められます。あなたの連勝 <span id="streak">0</span>。 <a href="tech.html">技術の説明</a></p>
+
+  <script src="vendor/chart/chart.umd.min.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
